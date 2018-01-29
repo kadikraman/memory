@@ -1,6 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { pulse, tada } from 'react-animations';
 import cardBackImage from '../assets/cardback.png';
+
+const pulseAnimation = keyframes`${pulse}`;
+const tadaAnimation = keyframes`${tada}`;
 
 const cardStyles = `
   height: 150px;
@@ -17,6 +21,12 @@ const cardStyles = `
 ;`;
 
 const Container = styled.div`
+  animation: ${p => {
+    if (p.isSelected) {
+      return `1s ${pulseAnimation}`;
+    }
+    return 'none';
+  }};
   height: 150px;
   width: 150px;
   position: relative;
@@ -25,6 +35,12 @@ const Container = styled.div`
 
 const CardFront = styled.div`
   ${cardStyles};
+  animation: ${p => {
+    if (p.isCorrect) {
+      return `1s ${tadaAnimation}`;
+    }
+    return 'none';
+  }};
   transform: ${p => (p.isSelected ? 'rotateY(0deg)' : 'rotateY(180deg)')};
 `;
 
@@ -43,9 +59,9 @@ const CardFrontImage = styled.img`
   width: 120px;
 `;
 
-export default ({ image, isSelected, onClick }) => (
-  <Container onClick={onClick}>
-    <CardFront isSelected={isSelected}>
+export default ({ image, isSelected, onClick, isCorrect }) => (
+  <Container onClick={onClick} isSelected={isSelected}>
+    <CardFront isSelected={isSelected} isCorrect={isCorrect}>
       <CardFrontImage src={image} />
     </CardFront>
     <CardBack isSelected={isSelected}>

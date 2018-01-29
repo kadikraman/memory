@@ -32,7 +32,8 @@ export default class Game extends Component {
     isSolved: false,
     cards: [],
     currentSelection: [],
-    timer: 0
+    timer: 0,
+    isTimerRunning: false
   };
 
   componentDidMount() {
@@ -41,6 +42,16 @@ export default class Game extends Component {
       isSolved: false
     });
   }
+
+  restart = () => {
+    this.setState({
+      isSolved: false,
+      cards: shuffle([...londonPeeps, ...londonPeeps]),
+      currentSelection: [],
+      timer: 0,
+      isTimerRunning: false
+    });
+  };
 
   tick = () => {
     this.setState({
@@ -119,9 +130,14 @@ export default class Game extends Component {
     const { onGoBack } = this.props;
     const { isSolved, cards, timer } = this.state;
 
+    const seconds = timer % 60;
+    const minutes = Math.floor(timer / 60);
+
     return (
       <Container>
-        <Time>{`${Math.floor(timer / 60)}:${timer % 60}`}</Time>
+        <Time>{`${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10
+          ? '0'
+          : ''}${seconds}`}</Time>
         <GameGrid>
           {cards.map((person, index) => (
             <Card
@@ -133,6 +149,7 @@ export default class Game extends Component {
                 }
               }}
               isSelected={person.isSelected}
+              isCorrect={person.isCorrect}
             />
           ))}
         </GameGrid>
