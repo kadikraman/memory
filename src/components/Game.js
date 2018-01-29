@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import shuffle from 'lodash/shuffle';
+import { rotateIn } from 'react-animations';
 import Button from './Button';
 import Card from './Card';
 import londonPeeps from './londonPeeps';
 import { selectByIndex, markCorrect, reset } from './gameEngine';
+
+const rotateInAnimation = keyframes`${rotateIn}`;
 
 const Container = styled.div`
   display: flex;
@@ -19,10 +22,34 @@ const GameGrid = styled.div`
   flex-wrap: wrap;
   width: 800px;
   margin-bottom: 20px;
+  position: relative;
 `;
 
 const Time = styled.div`
   font-size: 72px;
+  color: white;
+  font-family: monospace;
+`;
+
+const YouWin = styled.div`
+  animation: 1s ${rotateInAnimation};
+  position: absolute;
+  border: 1px solid #e95656;
+  background-color: rgba(188, 46, 46, 0.8);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 100px 150px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: column;
+  padding: 50px 0 20px 0;
+`;
+
+const WinningText = styled.div`
+  font-size: 48px;
   color: white;
   font-family: monospace;
 `;
@@ -152,6 +179,12 @@ export default class Game extends Component {
               isCorrect={person.isCorrect}
             />
           ))}
+          {isSolved ? (
+            <YouWin>
+              <WinningText>Yay, you win!</WinningText>
+              <Button onClick={this.restart}>Play again!</Button>
+            </YouWin>
+          ) : null}
         </GameGrid>
         <Button onClick={onGoBack}>Main menu</Button>
       </Container>
