@@ -5,6 +5,7 @@ import { rotateIn } from 'react-animations';
 import Button from './Button';
 import Card from './Card';
 import londonPeeps from './londonPeeps';
+import seattlePeeps from './seattlePeeps';
 import { selectByIndex, markCorrect, reset } from './gameEngine';
 
 const rotateInAnimation = keyframes`${rotateIn}`;
@@ -54,6 +55,12 @@ const WinningText = styled.div`
   font-family: monospace;
 `;
 
+const TimeText = styled.div`
+  font-size: 18px;
+  color: white;
+  font-family: monospace;
+`;
+
 export default class Game extends Component {
   state = {
     isSolved: false,
@@ -63,9 +70,21 @@ export default class Game extends Component {
     isTimerRunning: false
   };
 
+  getNewCards = () => {
+    const { type } = this.props;
+
+    if (type === 'London') {
+      return shuffle([...londonPeeps, ...londonPeeps]);
+    }
+
+    const shuffled = shuffle(seattlePeeps);
+    const picked = shuffled.splice(0, 6);
+    return shuffle([...picked, ...picked]);
+  };
+
   componentDidMount() {
     this.setState({
-      cards: shuffle([...londonPeeps, ...londonPeeps]),
+      cards: this.getNewCards(),
       isSolved: false
     });
   }
@@ -73,7 +92,7 @@ export default class Game extends Component {
   restart = () => {
     this.setState({
       isSolved: false,
-      cards: shuffle([...londonPeeps, ...londonPeeps]),
+      cards: this.getNewCards(),
       currentSelection: [],
       timer: 0,
       isTimerRunning: false
@@ -182,6 +201,9 @@ export default class Game extends Component {
           {isSolved ? (
             <YouWin>
               <WinningText>Yay, you win!</WinningText>
+              <TimeText>
+                Time: {minutes} minutes and {seconds} seconds
+              </TimeText>
               <Button onClick={this.restart}>Play again!</Button>
             </YouWin>
           ) : null}

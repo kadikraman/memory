@@ -24,7 +24,7 @@ const Buttons = styled.div`
 `;
 
 class App extends Component {
-  state = { selectedGame: 'London' };
+  state = { selectedGame: null };
 
   selectGame = selectedGame => {
     this.setState({
